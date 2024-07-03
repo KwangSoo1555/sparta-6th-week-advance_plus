@@ -14,20 +14,20 @@ datasource db {
 }
 
 model Users {
-  userId       Int        @id @default(autoincrement()) @map("user_id")
-  email        String     @map("email")
-  name         String     @map("name")   
-  password     String?    @map("password")
-  imgUrl       String?    @map("img_url")
-  phone        String     @map("phone")
+  userId       Int           @id @default(autoincrement()) @map("user_id")
+  email        String        @map("email")
+  name         String        @map("name")   
+  password     String?       @map("password")
+  imgUrl       String?       @map("img_url")
+  phone        String        @map("phone")
   address      String
-  point        Int        @default(1000000)
-  socialId     String?    @map("social_id")
+  point        Int           @default(1000000)
+  socialId     String?       @map("social_id")
   provider     Provider_Type @default(LOCAL)
-  createdAt    DateTime   @default(now()) @map("created_at")
-  updatedAt    DateTime   @updatedAt @map("updated_at")
-  isDeleted    Boolean    @default(false) @map("is_deleted")
-  isEmailValid Boolean    @default(false) @map("is_email_valid")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  isDeleted    Boolean       @default(false) @map("is_deleted")
+  isEmailValid Boolean       @default(false) @map("is_email_valid")
 
   @@map("users")
 }

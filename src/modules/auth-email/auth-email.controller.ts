@@ -1,5 +1,4 @@
-import { Controller, Body, Res, HttpStatus, Next, Post } from '@nestjs/common';
-import { Response, NextFunction } from 'express';
+import { Controller, Body, Post, HttpStatus, HttpException } from '@nestjs/common';
 
 import nodemailer from 'nodemailer';
 
@@ -7,9 +6,8 @@ import { ENV } from '../../common/constants/env.constant';
 import { AUTH_CONSTANT } from '../../common/constants/auth.constant';
 import { MESSAGES } from '../../common/constants/message.constant';
 
-@Controller('auth-email')
-
 // 이메일 인증 controller
+@Controller('auth-email')
 export class AuthEmailController {
   static codeNumber(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -41,24 +39,25 @@ export class AuthEmailController {
   @Post('/')
   async sendAuthEmail(
     @Body() body: { email: string },
-    @Res() res: Response,
-    @Next() next: NextFunction,
   ) {
     try {
       const verificationCode = AuthEmailController.codeIssue();
-      const timestamp = Date.now();
+      const sendTime = new Date(Date.now()).toLocaleString('ko-KR', {
+        timeZone: 'Asia/Seoul',
+      });
 
       if (!body.email) {
-        return res.status(HttpStatus.BAD_REQUEST).json({
+        throw new HttpException({
           status: HttpStatus.BAD_REQUEST,
           message: MESSAGES.AUTH.COMMON.EMAIL.REQUIRED,
-        });
+        }, HttpStatus.BAD_REQUEST);
       }
 
       AuthEmailController.codes[body.email] = {
         code: verificationCode,
-        timestamp,
+        sendTime: sendTime,
       };
+
       const mailOptions = {
         from: AUTH_CONSTANT.AUTH_EMAIL.FROM,
         to: body.email,
@@ -73,17 +72,16 @@ export class AuthEmailController {
 
       console.log(AuthEmailController.codes[body.email].code);
 
-      return res.status(HttpStatus.OK).json({
+      return {
         status: HttpStatus.OK,
         message: MESSAGES.AUTH.SIGN_UP.EMAIL.SUCCEED,
         data: AuthEmailController.codes,
-      });
+      };
     } catch (error) {
-      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      throw new HttpException({
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         message: MESSAGES.AUTH.SIGN_UP.EMAIL.FAIL,
-      });
-      next(error);
+      }, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
