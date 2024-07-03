@@ -16,6 +16,12 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
-  }
+    "noFallthroughCasesInSwitch": false, 
+    "typeRoots": ["./node_modules/@types", "./types"], 
+    "allowJs": true, 
+    "strict": true, 
+    "esModuleInterop": true, 
+  }, 
+  "include": ["src/**/*", "prisma/prisma.util.ts"],
+  "exclude": ["node_modules", "dist"]
 }
