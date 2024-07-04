@@ -4,6 +4,12 @@ export const ENV = {
   // 서버 포트
   SERVER_PORT: process.env.SERVER_PORT,
 
+  // MySQL 연결 정보
+  MYSQL_URL: process.env.MYSQL_URL,
+
+  // MongoDB 연결 정보
+  MONGODB_URL: process.env.MONGODB_URL,
+
   // JWT 관련
   ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET,
   REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET,

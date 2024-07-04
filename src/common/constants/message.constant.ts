@@ -52,9 +52,12 @@ export const MESSAGES = {
     },
     SIGN_UP: {
       EMAIL: {
-        DUPLICATED: '이메일이나 별명이 이미 존재합니다.',
+        DUPLICATED: '이메일이 이미 존재합니다.',
         FAIL: '메일 전송에 실패했습니다.',
         SUCCEED: '메일 전송에 성공했습니다.',
+      },
+      NAME: {
+        DUPLICATED: '별명이 이미 존재합니다.',
       },
       VERIFICATION_CODE: {
         BASE: '이메일 인증 코드는 정수입니다.',
@@ -76,7 +79,7 @@ export const MESSAGES = {
     },
     PASSPORT: {
       COMMON: {
-        FAIL: '소셜 로그인에 실패했습니다.',
+        FAIL: '로그인에 실패했습니다.',
       },
       NAVER: {
         SUCCEED: '네이버 로그인에 성공했습니다.',
