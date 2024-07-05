@@ -2,7 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 
 @Controller()
 export class HelloController {
-  @Get('api')
+  @Get()
   getHello(): string {
     return `
     <h1>Hello World</h1>

@@ -5,7 +5,7 @@ export const ENV = {
   SERVER_PORT: process.env.SERVER_PORT,
 
   // MySQL 연결 정보
-  MYSQL_URL: process.env.MYSQL_URL,
+  MYSQL_URL: process.env.DATABASE_URL,
 
   // MongoDB 연결 정보
   MONGODB_URL: process.env.MONGODB_URL,

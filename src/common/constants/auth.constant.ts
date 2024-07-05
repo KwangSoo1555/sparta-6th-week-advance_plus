@@ -3,12 +3,7 @@ export const AUTH_CONSTANT = {
   REFRESH_TOKEN_EXPIRES_IN: '7d',
 
   HASH_SALT_ROUNDS: 10,
-  // 유효성 검사시 비밀번호 최소 길이
-  PASSWORD_MIN_LENGTH: 6,
-  // 유효성 검사시 이메일 형식
-  TLDS: ['com', 'net', 'kr'],
-  //유효성 검사시 최소 도메인 요소
-  MIN_DOMAIN_SEGMENTS: 2,
+
   // 이메일 인증 관련 상수
   AUTH_EMAIL: {
     FROM: process.env.MAIL_AUTH_USER,
