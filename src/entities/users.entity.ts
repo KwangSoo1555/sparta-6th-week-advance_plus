@@ -1,8 +1,16 @@
-import { Entity, BaseEntity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { JwtEntity } from './jwt.entity';
+import {
+  Entity,
+  BaseEntity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToOne,
+} from "typeorm";
+import { JwtEntity } from "./jwt.entity";
 
 @Entity()
-export class UsersEntity extends BaseEntity {
+export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   userId: number;
 
@@ -14,14 +22,20 @@ export class UsersEntity extends BaseEntity {
 
   @Column()
   password: string;
-  
+
   @Column()
   phone: string;
 
   @Column()
   address: string;
 
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
   // userId 를 jwt entity 외래키로 연결하는 엔티티
-  @OneToMany(() => JwtEntity, (jwt) => jwt.userId)
-  jwt: JwtEntity[];
+  @OneToOne(() => JwtEntity, (jwtByJwtEntity) => jwtByJwtEntity.userByUserEntity)
+  jwtByJwtEntity: JwtEntity;
 }

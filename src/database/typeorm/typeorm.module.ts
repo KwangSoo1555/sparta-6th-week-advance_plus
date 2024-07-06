@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule as TypeOrm } from '@nestjs/typeorm';
-import { typeOrmConfig } from './typeorm.config';
+import { TypeOrmModule as NestTypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmConfig } from './typeorm.config';
 
 @Module({
-  imports: [TypeOrm.forRoot(typeOrmConfig)],
+  imports: [NestTypeOrmModule.forRootAsync({
+    useClass: TypeOrmConfig,
+  })],
 })
 export class TypeOrmModule {}

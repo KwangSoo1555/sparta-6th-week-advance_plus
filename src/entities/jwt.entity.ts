@@ -3,10 +3,14 @@ import {
   BaseEntity,
   Column,
   PrimaryGeneratedColumn,
-  ManyToOne,
+  OneToOne,
   JoinColumn,
-} from 'typeorm';
-import { UsersEntity } from './users.entity';
+  CreateDateColumn,
+  UpdateDateColumn,
+  BeforeInsert,
+  BeforeUpdate,
+} from "typeorm";
+import { UserEntity } from "./users.entity";
 
 @Entity()
 export class JwtEntity extends BaseEntity {
@@ -14,25 +18,42 @@ export class JwtEntity extends BaseEntity {
   refreshTokenId: number;
 
   // userId 를 users entity 에서 받아옴
-  @ManyToOne(() => UsersEntity, (user) => user.jwt)
-  @JoinColumn({ name: 'userId' })
-  userId: UsersEntity;
+  // 일대일, => user 엔티티 호출, (여기서 부를 이름) => (여기서 부를 이름).유저 엔티티에서 불릴 이름
+  @OneToOne(() => UserEntity, (userByUserEntity) => userByUserEntity.jwtByJwtEntity)
+  @JoinColumn({
+    // 외래키 설정 (데이터 베이스에 매핑된 컬럼) prisma 에서는 fields
+    name: "user_id",
+    // 외래키 설정 (user엔티티에서 가져온 퓨어 컬럼) prisma 에서는 references
+    referencedColumnName: "userId",
+  })
+  // 엔티티 연결
+  userByUserEntity: UserEntity;
 
   @Column()
   refreshToken: string;
 
-  @Column()
+  @Column({ nullable: true, default: null })
   ip: string;
 
-  @Column()
+  @Column({ nullable: true, default: null })
   userAgent: string;
 
-  @Column()
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column()
+  @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column()
-  expiresAt: Date;
+  @CreateDateColumn()
+  refreshTokenExpiresAt: Date;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  setRefreshTokenExpiresAt() {
+    if (!this.refreshTokenExpiresAt) {
+      const now = new Date();
+      now.setDate(now.getDate() + 7);
+      this.refreshTokenExpiresAt = now;
+    }
+  }
 }
