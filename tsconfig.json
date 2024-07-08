@@ -21,11 +21,5 @@
     "allowJs": true, 
     "strict": true, 
     "esModuleInterop": true, 
-    "paths": {
-      "src/*": ["src/*"]
-    },
-    "rootDir": "./src",
   }, 
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
 }
