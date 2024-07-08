@@ -15,8 +15,8 @@ import { AuthController } from "src/modules/auth/auth-user/auth.controller";
 import { JwtRepository } from "src/modules/auth/jwt/jwt.repository";
 
 import { UserEntity } from "src/entities/users.entity";
-import { AUTH_CONSTANT } from "src/common/constants/auth.constant";
 import { ENV } from "src/common/constants/env.constant";
+import { AUTH_CONSTANT } from "src/common/constants/auth.constant";
 
 @Module({
   imports: [
@@ -41,7 +41,6 @@ import { ENV } from "src/common/constants/env.constant";
     }),
     TypeOrmModule.forFeature([UserEntity]),
     JwtModule,
-    NestJwtModule,
     AuthEmailModule,
     ConfigModule,
   ],
@@ -52,6 +51,11 @@ import { ENV } from "src/common/constants/env.constant";
     JwtRepository,
     AccessTokenStrategy,
     RefreshTokenStrategy,
+  ],
+  exports: [
+    AuthService, 
+    AuthRepository, 
+    JwtRepository
   ],
 })
 export class AuthModule {}

@@ -6,12 +6,17 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToOne,
+  OneToMany,
 } from "typeorm";
-import { JwtEntity } from "./jwt.entity";
 
-@Entity()
+import { JwtEntity } from "src/entities/jwt.entity";
+import { ShowEntity } from "src/entities/shows.entity";
+
+import { UserRole } from "src/common/constants/enums";
+
+@Entity("user")
 export class UserEntity extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ name: "user_id" })
   userId: number;
 
   @Column({ unique: true })
@@ -29,13 +34,26 @@ export class UserEntity extends BaseEntity {
   @Column()
   address: string;
 
-  @CreateDateColumn()
+  @Column({ default: UserRole.USER })
+  role: UserRole;
+
+  @Column({ default: 1000000 })
+  point: number;
+
+  @Column({ name: "img_url", default: null })
+  imgUrl: string;
+
+  @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: "updated_at" })
   updatedAt: Date;
 
   // userId 를 jwt entity 외래키로 연결하는 엔티티
   @OneToOne(() => JwtEntity, (jwtByJwtEntity) => jwtByJwtEntity.userByUserEntity)
   jwtByJwtEntity: JwtEntity;
+
+  // userId 를 show entity 외래키로 연결하는 엔티티
+  @OneToMany(() => ShowEntity, (showByShowEntity) => showByShowEntity.userByUserEntity)
+  showByShowEntity: ShowEntity[];
 }

@@ -1,13 +1,14 @@
-import {
-  IsNotEmpty,
-  IsString,
-  IsNumber,
-  IsEmail,
-  MinLength,
-  MaxLength,
-} from 'class-validator';
-import { Exclude } from 'class-transformer';
-import { passwordMatch } from 'src/common/custom-decorator/auth-validator';
+import { 
+  IsNotEmpty, 
+  IsString, 
+  IsNumber, 
+  IsEmail, 
+  MinLength, 
+  MaxLength 
+} from "class-validator";
+
+import { Exclude } from "class-transformer";
+import { passwordMatch } from "src/common/custom-decorator/auth-validator";
 
 export class CreateSignUpDto {
   @IsNotEmpty()
@@ -20,15 +21,15 @@ export class CreateSignUpDto {
   @MaxLength(255)
   email: string;
 
+  @Exclude({ toPlainOnly: true })
   @IsNotEmpty()
   @IsString()
   @MinLength(8)
   @MaxLength(20)
-  @Exclude({ toPlainOnly: true })
   password: string;
 
   @IsNotEmpty()
-  @passwordMatch('password')
+  @passwordMatch("password")
   passwordCheck: string;
 
   @IsNotEmpty()

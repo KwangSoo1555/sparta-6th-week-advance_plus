@@ -5,7 +5,6 @@ export class PrismaConfig {
 
   constructor() {
     this.prisma = new PrismaClient({
-      log: ["query", "info", "warn", "error"],
       errorFormat: "pretty",
     });
     this.connect();
@@ -14,9 +13,12 @@ export class PrismaConfig {
   async connect() {
     try {
       await this.prisma.$connect();
-      console.log("Success PrismaDB connection.");
+      console.log("Success Prisma client connection!");
     } catch (error) {
-      console.error("Failed PrismaDB connection.", error);
+      console.error(
+        "Failed Prisma client connection. Please check your connection string and try again.",
+        error,
+      );
     } finally {
       await this.prisma.$disconnect();
     }

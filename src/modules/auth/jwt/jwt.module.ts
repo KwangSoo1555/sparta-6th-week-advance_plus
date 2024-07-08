@@ -12,7 +12,6 @@ import { AUTH_CONSTANT } from "src/common/constants/auth.constant";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([JwtEntity]),
     ConfigModule,
     NestJwtModule.registerAsync({
       global: true,
@@ -32,9 +31,10 @@ import { AUTH_CONSTANT } from "src/common/constants/auth.constant";
         signOptions: { expiresIn: AUTH_CONSTANT.REFRESH_TOKEN_EXPIRES_IN },
       }),
     }),
+    TypeOrmModule.forFeature([JwtEntity]),
   ],
   controllers: [JwtController],
   providers: [JwtService, JwtRepository, ConfigService],
-  exports: [JwtService],
+  exports: [JwtService, JwtRepository],
 })
 export class JwtModule {}

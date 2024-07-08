@@ -10,9 +10,9 @@ import {
 
 import { AuthService } from "src/modules/auth/auth-user/auth.service";
 
-import { CreateSignUpDto, CreateSignInDto } from "src/dto/auth.dto";
 import { UserEntity } from "src/entities/users.entity";
 import { JwtEntity } from "src/entities/jwt.entity";
+import { CreateSignUpDto, CreateSignInDto } from "src/dto/auth.dto";
 
 @Controller("auth")
 export class AuthController {

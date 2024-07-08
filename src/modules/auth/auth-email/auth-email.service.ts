@@ -4,9 +4,9 @@ import { Injectable } from "@nestjs/common";
 import { HttpStatus } from "@nestjs/common";
 
 import { SendAuthEmailDto } from "src/dto/auth-email.dto";
+import { ENV } from "src/common/constants/env.constant";
 import { MESSAGES } from "src/common/constants/message.constant";
 import { AUTH_CONSTANT } from "src/common/constants/auth.constant";
-import { ENV } from "src/common/constants/env.constant";
 
 @Injectable()
 export class AuthEmailService {

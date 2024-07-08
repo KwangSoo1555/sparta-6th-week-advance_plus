@@ -8,26 +8,23 @@ import {
   UnauthorizedException,
   NotFoundException,
 } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
 import { ConfigService } from "@nestjs/config";
 
 import { AuthRepository } from "src/modules/auth/auth-user/auth.repository";
 import { JwtRepository } from "src/modules/auth/jwt/jwt.repository";
 import { AuthEmailService } from "src/modules/auth/auth-email/auth-email.service";
 
-import { CreateSignUpDto, CreateSignInDto } from "src/dto/auth.dto";
-import { JwtDto } from "src/dto/jwt.dto";
 import { UserEntity } from "src/entities/users.entity";
 import { JwtEntity } from "src/entities/jwt.entity";
+import { CreateSignUpDto, CreateSignInDto } from "src/dto/auth.dto";
+import { JwtDto } from "src/dto/jwt.dto";
 import { MESSAGES } from "src/common/constants/message.constant";
 import { AUTH_CONSTANT } from "src/common/constants/auth.constant";
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(AuthRepository)
     private authRepository: AuthRepository,
-    @InjectRepository(JwtRepository)
     private jwtRepository: JwtRepository,
     private authEmailService: AuthEmailService,
     private configService: ConfigService, 
@@ -46,6 +43,7 @@ export class AuthService {
 
     // 이메일 인증 코드 확인
     const sendedEmailCode = this.authEmailService.getCode(email);
+
     if (
       !sendedEmailCode ||
       this.authEmailService.isExpired(sendedEmailCode.timestamp) ||

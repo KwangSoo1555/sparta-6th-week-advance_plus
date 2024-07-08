@@ -3,25 +3,24 @@ import * as jwt from "jsonwebtoken";
 import { JwtPayload } from "jsonwebtoken";
 
 import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
 
 import { JwtRepository } from "src/modules/auth/jwt/jwt.repository";
+import { AuthRepository } from "src/modules/auth/auth-user/auth.repository";
 
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { PassportStrategy } from "@nestjs/passport";
 import { ConfigService } from "@nestjs/config";
 import { AuthGuard } from "@nestjs/passport";
 
-import { JwtDto } from "src/dto/jwt.dto";
 import { JwtEntity } from "src/entities/jwt.entity";
+import { JwtDto } from "src/dto/jwt.dto";
+import { ENV } from "src/common/constants/env.constant";
 import { MESSAGES } from "src/common/constants/message.constant";
 import { AUTH_CONSTANT } from "src/common/constants/auth.constant";
-import { ENV } from "src/common/constants/env.constant";
 
 @Injectable()
 export class JwtService {
   constructor(
-    @InjectRepository(JwtRepository)
     private jwtRepository: JwtRepository,
     private configService: ConfigService,
   ) {}
@@ -29,19 +28,34 @@ export class JwtService {
   async tokenReissue(jwtDto: JwtDto): Promise<JwtEntity> {
     const payload = jwt.verify(
       jwtDto.refreshToken,
-      this.configService.get(ENV.REFRESH_TOKEN_SECRET),
+      ENV.REFRESH_TOKEN_SECRET
     ) as JwtPayload;
+
     const { userId } = payload;
+
+    const existingRefreshToken = await this.jwtRepository.checkRefreshToken(userId);
+
+    if (!existingRefreshToken)
+      throw new UnauthorizedException(MESSAGES.AUTH.COMMON.JWT.INVALID);
+
+    const matchRefreshToken = await bcrypt.compare(
+      jwtDto.refreshToken,
+      existingRefreshToken.refreshToken,
+    );
+
+    if (!matchRefreshToken)
+      throw new UnauthorizedException(MESSAGES.AUTH.COMMON.JWT.INVALID);
 
     // 새로운 token 생성
     const reIssueAccessToken = jwt.sign(
       { userId },
-      this.configService.get(ENV.ACCESS_TOKEN_SECRET),
+      ENV.ACCESS_TOKEN_SECRET,
       { expiresIn: AUTH_CONSTANT.ACCESS_TOKEN_EXPIRES_IN },
     );
+
     const reIssueRefreshToken = jwt.sign(
       { userId },
-      this.configService.get(ENV.REFRESH_TOKEN_SECRET),
+      ENV.REFRESH_TOKEN_SECRET,
       { expiresIn: AUTH_CONSTANT.REFRESH_TOKEN_EXPIRES_IN },
     );
 
@@ -50,6 +64,7 @@ export class JwtService {
       reIssueRefreshToken,
       AUTH_CONSTANT.HASH_SALT_ROUNDS,
     );
+    console.log("Hashed reissued refresh token:", hashedReIssueRefreshToken);
 
     await this.jwtRepository.tokenReissueAndRestoreRefreshToken({
       refreshToken: hashedReIssueRefreshToken,
@@ -67,7 +82,8 @@ export class JwtService {
 @Injectable()
 export class AccessTokenStrategy extends PassportStrategy(Strategy, "access-token") {
   constructor(
-    private configService: ConfigService
+    private configService: ConfigService,
+    private authRepository: AuthRepository
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -79,7 +95,11 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, "access-toke
   async validate(payload: JwtPayload) {
     const { userId } = payload;
 
-    return userId;
+    const user = await this.authRepository.checkUser(null, userId);
+    if (!user)
+      throw new UnauthorizedException(MESSAGES.AUTH.COMMON.JWT.INVALID);
+
+    return user;
   }
 }
 
@@ -88,7 +108,7 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, "access-toke
 export class RefreshTokenStrategy extends PassportStrategy(Strategy, "refresh-token") {
   constructor(
     private configService: ConfigService,
-    private jwtRepository: JwtRepository,
+    private authRepository: AuthRepository,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -99,10 +119,11 @@ export class RefreshTokenStrategy extends PassportStrategy(Strategy, "refresh-to
 
   async validate(payload: JwtPayload) {
     const { userId } = payload;
-    const user = await this.jwtRepository.checkJwt(userId);
-    if (!user) {
+
+    const user = await this.authRepository.checkUser(null, userId);
+    if (!user) 
       throw new UnauthorizedException(MESSAGES.AUTH.COMMON.JWT.INVALID);
-    }
+    
     return user;
   }
 }

@@ -9,12 +9,14 @@ import {
   UpdateDateColumn,
   BeforeInsert,
   BeforeUpdate,
+  Unique,
 } from "typeorm";
 import { UserEntity } from "./users.entity";
 
-@Entity()
+@Entity("jwt")
+@Unique(["userByUserEntity"])
 export class JwtEntity extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ name: "refresh_token_id" })
   refreshTokenId: number;
 
   // userId 를 users entity 에서 받아옴
@@ -29,22 +31,22 @@ export class JwtEntity extends BaseEntity {
   // 엔티티 연결
   userByUserEntity: UserEntity;
 
-  @Column()
+  @Column({ name: "refresh_token" })
   refreshToken: string;
 
   @Column({ nullable: true, default: null })
   ip: string;
 
-  @Column({ nullable: true, default: null })
+  @Column({ name: "user_agent", nullable: true, default: null })
   userAgent: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: "created_at" })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: "updated_at" })
   updatedAt: Date;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: "refresh_token_expires_at" })
   refreshTokenExpiresAt: Date;
 
   @BeforeInsert()
