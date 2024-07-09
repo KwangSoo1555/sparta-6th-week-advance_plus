@@ -8,7 +8,7 @@ import {
   Headers,
 } from "@nestjs/common";
 
-import { AuthService } from "src/modules/auth/auth-user/auth.service";
+import { AuthService } from "src/modules/auth/auth-user/auth-user.service";
 
 import { UserEntity } from "src/entities/users.entity";
 import { JwtEntity } from "src/entities/jwt.entity";

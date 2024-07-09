@@ -1,62 +1,36 @@
 import {
-    Entity,
-    BaseEntity,
-    Column,
-    PrimaryGeneratedColumn,
-    CreateDateColumn,
-    UpdateDateColumn,
-    JoinColumn,
-    ManyToOne,
-  } from "typeorm";
-  
-  import { ShowEntity } from "./shows.entity";
-  import { SeatGrade } from "src/common/constants/enums";
-  
-  @Entity("seat")
-  export class SeatEntity extends BaseEntity {
-    @PrimaryGeneratedColumn({ name: "seat_id" })
-    seatId: number;
-  
-    // userId 를 users entity 에서 받아옴
-    // 일대일, => user 엔티티 호출, (여기서 부를 이름) => (여기서 부를 이름).유저 엔티티에서 불릴 이름
-    @ManyToOne(() => ShowEntity, (showByShowEntity) => showByShowEntity.seatBySeatEntity)
-    @JoinColumn({
-      // 외래키 설정 (데이터 베이스에 매핑된 컬럼) prisma 에서는 fields
-      name: "show_id",
-      // 외래키 설정 (user엔티티에서 가져온 퓨어 컬럼) prisma 에서는 references
-      referencedColumnName: "showId",
-    })
-    // 엔티티 연결
-    showByShowEntity: ShowEntity;
-  
-    @Column()
-    grade: SeatGrade;
-  
-    @Column()
-    description: string;
-  
-    @Column()
-    place: string;
-  
-    @Column()
-    genre: string;
-  
-    @Column({ name: "start_date" })
-    startDate: string;
-  
-    @Column()
-    runtime: string;
-  
-    @Column()
-    actor: string;
-  
-    @Column({ name: "img_url" })
-    imgUrl: string;
-  
-    @CreateDateColumn({ name: "created_at" })
-    createdAt: Date;
-  
-    @UpdateDateColumn({ name: "updated_at" })
-    updatedAt: Date;
-  }
-  
+  Entity,
+  BaseEntity,
+  Column,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+  ManyToOne,
+} from "typeorm";
+
+import { ShowEntity } from "./shows.entity";
+import { SeatGrade } from "src/common/constants/enums";
+
+@Entity("seat")
+export class SeatEntity extends BaseEntity {
+  @PrimaryGeneratedColumn({ name: "seat_id" })
+  seatId: number;
+
+  @ManyToOne(() => ShowEntity, (showByShowEntity) => showByShowEntity.seatBySeatEntity)
+  @JoinColumn({
+    name: "show_id",
+    referencedColumnName: "showId",
+  })
+  showByShowEntity: ShowEntity;
+
+  @Column({ type: "enum", enum: SeatGrade, nullable: true, default: SeatGrade.BRONZE })
+  grade: SeatGrade;
+
+  @Column()
+  price: number;
+
+  @Column()
+  row: string;
+
+  @Column()
+  column: number;
+}

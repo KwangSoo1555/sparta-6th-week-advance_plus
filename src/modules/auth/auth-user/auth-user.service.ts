@@ -10,7 +10,7 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 
-import { AuthRepository } from "src/modules/auth/auth-user/auth.repository";
+import { AuthRepository } from "src/modules/auth/auth-user/auth-user.repository";
 import { JwtRepository } from "src/modules/auth/jwt/jwt.repository";
 import { AuthEmailService } from "src/modules/auth/auth-email/auth-email.service";
 

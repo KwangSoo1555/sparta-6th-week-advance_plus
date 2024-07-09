@@ -5,7 +5,7 @@ import { JwtPayload } from "jsonwebtoken";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 
 import { JwtRepository } from "src/modules/auth/jwt/jwt.repository";
-import { AuthRepository } from "src/modules/auth/auth-user/auth.repository";
+import { AuthRepository } from "src/modules/auth/auth-user/auth-user.repository";
 
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { PassportStrategy } from "@nestjs/passport";
