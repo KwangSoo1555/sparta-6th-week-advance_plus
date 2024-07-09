@@ -13,14 +13,14 @@ export class PrismaConfig {
   async connect() {
     try {
       await this.prisma.$connect();
-      console.log("Success Prisma client connection!");
+      console.log(
+        "Success Prisma client connection!"
+      );
     } catch (error) {
       console.error(
         "Failed Prisma client connection. Please check your connection string and try again.",
         error,
       );
-    } finally {
-      await this.prisma.$disconnect();
     }
   }
 }

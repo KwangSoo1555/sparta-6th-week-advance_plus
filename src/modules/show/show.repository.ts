@@ -16,17 +16,42 @@ export class ShowRepository extends Repository<ShowEntity> {
     return this.save(show);
   }
 
-  async getShow(showId: number): Promise<ShowEntity[]> {
-    return this.find({ where: { showId } });
+  async getShowsAll(): Promise<ShowEntity[]> {
+    return this.find({
+      select: {
+        title: true,
+        description: true,
+        genre: true,
+        actor: true,
+      },
+    });
   }
 
-  async updateShow(updateShowDto: UpdateShowDto): Promise<ShowEntity> {
-    const show = this.create(updateShowDto);
+  async getShowsDetailsByGenre(genre: string): Promise<ShowEntity[]> {
+    return this.find({
+      where: { genre },
+      select: {
+        title: true,
+        description: true,
+        genre: true,
+        actor: true,
+      },
+    });
+  }
 
-    return this.save(show);
+  async getShowDetails(showId: number): Promise<ShowEntity> {
+    return this.findOne({ where: { showId: showId } });
+  }
+
+  async updateShow(updateShowDto: UpdateShowDto, showId: number): Promise<ShowEntity> {
+    await this.update({ showId: showId }, updateShowDto);
+
+    const updatedShow = await this.findOne({ where: { showId: showId } });
+
+    return updatedShow;
   }
 
   async deleteShow(showId: number): Promise<DeleteResult> {
-    return this.delete({ showId });
+    return this.delete({ showId: showId });
   }
 }

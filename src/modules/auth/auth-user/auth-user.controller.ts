@@ -10,8 +10,6 @@ import {
 
 import { AuthService } from "src/modules/auth/auth-user/auth-user.service";
 
-import { UserEntity } from "src/entities/users.entity";
-import { JwtEntity } from "src/entities/jwt.entity";
 import { CreateSignUpDto, CreateSignInDto } from "src/dto/auth.dto";
 
 @Controller("auth")
@@ -22,7 +20,7 @@ export class AuthController {
   @UsePipes(ValidationPipe)
   signUp(
     @Body() signUpDto: CreateSignUpDto
-  ): Promise<UserEntity> {
+  ) {
     return this.authService.signUp(signUpDto);
   }
 
@@ -32,7 +30,7 @@ export class AuthController {
     @Ip() ip: string,
     @Headers("user-agent") userAgent: string,
     @Body() signInDto: CreateSignInDto,
-  ): Promise<JwtEntity> {
+  ) {
     return this.authService.signIn(signInDto, ip, userAgent);
   }
 }

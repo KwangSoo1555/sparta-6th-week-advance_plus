@@ -3,9 +3,9 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { JwtModule as NestJwtModule } from "@nestjs/jwt";
 
-import { JwtRepository } from "src/modules/auth/jwt/jwt.repository";
-import { JwtService } from "src/modules/auth/jwt/jwt.service";
-import { JwtController } from "src/modules/auth/jwt/jwt.controller";
+import { JwtRepository } from "./jwt.repository";
+import { JwtService } from "./jwt.service";
+import { JwtController } from "./jwt.controller";
 
 import { JwtEntity } from "src/entities/jwt.entity";
 import { AUTH_CONSTANT } from "src/common/constants/auth.constant";

@@ -14,10 +14,7 @@ import { AuthRepository } from "src/modules/auth/auth-user/auth-user.repository"
 import { JwtRepository } from "src/modules/auth/jwt/jwt.repository";
 import { AuthEmailService } from "src/modules/auth/auth-email/auth-email.service";
 
-import { UserEntity } from "src/entities/users.entity";
-import { JwtEntity } from "src/entities/jwt.entity";
 import { CreateSignUpDto, CreateSignInDto } from "src/dto/auth.dto";
-import { JwtDto } from "src/dto/jwt.dto";
 import { MESSAGES } from "src/common/constants/message.constant";
 import { AUTH_CONSTANT } from "src/common/constants/auth.constant";
 
@@ -32,13 +29,13 @@ export class AuthService {
 
   async checkUser(
     email: string
-  ): Promise<UserEntity> {
+  ) {
     return this.authRepository.checkUser(email);
   }
 
   async signUp(
     signUpDto: CreateSignUpDto
-  ): Promise<UserEntity> {
+  ) {
     const { email, password, verificationCode } = signUpDto;
 
     // 이메일 인증 코드 확인
@@ -74,7 +71,7 @@ export class AuthService {
     signInDto: CreateSignInDto,
     ip: string,
     userAgent: string,
-   ): Promise<JwtEntity> {
+  ) {
     const { email, password } = signInDto;
 
     const user = await this.checkUser(email);
@@ -106,17 +103,11 @@ export class AuthService {
     const hashedRefreshToken = bcrypt.hashSync(refreshToken, AUTH_CONSTANT.HASH_SALT_ROUNDS);
 
     // hashed refresh token 을 jwt entity 에 저장
-    const jwtDto: JwtDto = {
-      refreshToken: hashedRefreshToken,
-      ip,
-      userAgent,
-      userByUserEntity: user,
-    };
-    await this.jwtRepository.refreshTokenStore(jwtDto);
+    await this.jwtRepository.storeRefreshToken(user.userId, hashedRefreshToken, ip, userAgent);
 
     return {
       accessToken,
       refreshToken,
-    } as unknown as JwtEntity;
+    };
   }
 }

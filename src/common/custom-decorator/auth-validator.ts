@@ -6,7 +6,7 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 
-// password and passwordCheck must be the same
+// 회원가입 시 password와 passwordCheck가 같은지 확인하는 데코레이터
 @ValidatorConstraint({ name: 'Match' })
 export class MatchConstraint implements ValidatorConstraintInterface {
   validate(value: any, args: ValidationArguments) {

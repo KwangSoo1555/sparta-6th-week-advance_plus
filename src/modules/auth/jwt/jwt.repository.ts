@@ -2,7 +2,6 @@ import { DataSource, Repository } from "typeorm";
 import { Injectable } from "@nestjs/common";
 
 import { JwtEntity } from "src/entities/jwt.entity";
-import { JwtDto } from "src/dto/jwt.dto";
 
 @Injectable()
 export class JwtRepository extends Repository<JwtEntity> {
@@ -20,24 +19,36 @@ export class JwtRepository extends Repository<JwtEntity> {
   }
 
   // auth.service.ts 에 sign-in 에서 호출 (로그인 하면 refresh token 만 저장하는 용도)
-  async refreshTokenStore(
-    jwtDto: JwtDto
-  ): Promise<JwtEntity> {
-    await this.upsert(jwtDto, {
-      conflictPaths: ["userByUserEntity"],
+  async storeRefreshToken(
+    userId: number,
+    refreshToken: string,
+    ip: string,
+    userAgent: string
+  ) {
+    console.log('storeRefreshToken called with:', { userId, refreshToken, ip, userAgent }); // 디버깅 로그 추가
+    await this.upsert({ userId, refreshToken, ip, userAgent }, {
+      conflictPaths: ["userId"],
       skipUpdateIfNoValuesChanged: true,
     });
 
-    const refreshToken = await this.findOne({
-      where: { userByUserEntity: { userId: jwtDto.userByUserEntity.userId } },
+    // await this.upsert(updateUserDto, {
+    //   conflictPaths: ["userId"],
+    //   skipUpdateIfNoValuesChanged: true,
+    // });
+
+    const storedRefreshToken = await this.findOne({
+      where: { userId: userId },
     });
-    return refreshToken;
+    return storedRefreshToken;
   }
 
   // jwt.service.ts 에서 호출 (refresh token 을 검증하는 용도)
-  async tokenReissueAndRestoreRefreshToken(
-    jwtDto: JwtDto
-  ): Promise<JwtEntity> {
-    return await this.save(jwtDto);
+  async restoreRefreshToken(
+    userId: number,
+    refreshToken: string,
+    ip: string,
+    userAgent: string
+  ) {
+    return await this.save({ userId, refreshToken, ip, userAgent });
   }
 }

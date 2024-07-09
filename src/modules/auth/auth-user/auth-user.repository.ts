@@ -43,7 +43,7 @@ export class AuthRepository extends Repository<UserEntity> {
   ): Promise<UserEntity> {
     await this.update({ userId }, updateUserPermissionDto);
 
-    const updatedUser = await this.findOne({ where: { userId } });
+    const updatedUser = await this.findOne({ where: { userId }, select: { role : true } });
 
     return updatedUser;
   } 

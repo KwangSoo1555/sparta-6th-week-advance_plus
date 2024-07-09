@@ -8,9 +8,9 @@ import { AccessTokenStrategy, RefreshTokenStrategy } from "src/modules/auth/jwt/
 
 import { AuthEmailModule } from "src/modules/auth/auth-email/auth-email.module";
 
-import { AuthRepository } from "src/modules/auth/auth-user/auth-user.repository";
-import { AuthService } from "src/modules/auth/auth-user/auth-user.service";
-import { AuthController } from "src/modules/auth/auth-user/auth-user.controller";
+import { AuthRepository } from "./auth-user.repository";
+import { AuthService } from "./auth-user.service";
+import { AuthController } from "./auth-user.controller";
 
 import { JwtRepository } from "src/modules/auth/jwt/jwt.repository";
 
@@ -58,4 +58,4 @@ import { AUTH_CONSTANT } from "src/common/constants/auth.constant";
     JwtRepository
   ],
 })
-export class AuthModule {}
+export class AuthUserModule {}

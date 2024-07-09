@@ -3,44 +3,44 @@ import {
     IsEmail, 
     MinLength, 
     MaxLength,
-    IsEnum
+    IsEnum,
+    IsOptional,
 } from "class-validator";
-import { UserRole } from "src/common/constants/enums";
 import { Exclude } from "class-transformer";
 
-import { UserEntity } from "src/entities/users.entity";
+import { UserRole } from "src/common/constants/enums";
 
 export class UpdateUserDto {
-  userByUserEntity: UserEntity;
-  
+  @IsOptional()
   @IsEmail()
   @MaxLength(255)
-  email?: string;
+  email: string;
 
+  @IsOptional()
   @IsString()
   @MaxLength(255)
-  name?: string;
+  name: string;
 
+  @IsOptional()
   @Exclude({ toPlainOnly: true })
   @IsString()
-  @MinLength(10)
-  @MaxLength(15)
-  password?: string;
+  @MinLength(8)
+  @MaxLength(20)
+  password: string;
 
+  @IsOptional()
+  @IsString()
+  phone: string;
+
+  @IsOptional()
+  @IsString()
+  address: string;
+
+  @IsOptional()
   @IsString()
   @MinLength(10)
-  @MaxLength(15)
-  phone?: string;
-
-  @IsString()
-  @MinLength(5)
   @MaxLength(255)
-  address?: string;
-
-  @IsString()
-  @MinLength(10)
-  @MaxLength(255)
-  imgUrl?: string;
+  imgUrl: string;
 }
 
 export class UpdateUserPermissionDto {

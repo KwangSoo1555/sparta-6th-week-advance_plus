@@ -4,7 +4,7 @@ import {
   Column,
   PrimaryGeneratedColumn,
   JoinColumn,
-  ManyToOne,
+  OneToOne,
 } from "typeorm";
 
 import { ShowEntity } from "./shows.entity";
@@ -15,7 +15,7 @@ export class SeatEntity extends BaseEntity {
   @PrimaryGeneratedColumn({ name: "seat_id" })
   seatId: number;
 
-  @ManyToOne(() => ShowEntity, (showByShowEntity) => showByShowEntity.seatBySeatEntity)
+  @OneToOne(() => ShowEntity, (showByShowEntity) => showByShowEntity.seatBySeatEntity)
   @JoinColumn({
     name: "show_id",
     referencedColumnName: "showId",

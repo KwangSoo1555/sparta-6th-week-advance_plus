@@ -6,10 +6,10 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 
-export const Roles = (...roles: string[]) => SetMetadata('roles', roles);
+export const RoleGuards = (...roles: string[]) => SetMetadata('roles', roles);
 
 @Injectable()
-export class RolesGuard implements CanActivate {
+export class RolesGuardTypeCustotm implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(

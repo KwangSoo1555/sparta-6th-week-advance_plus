@@ -1,4 +1,4 @@
-import { 
+import {
   Controller,
   Post,
   Get,
@@ -14,57 +14,68 @@ import {
 
 import { ShowService } from "./show.service";
 
-import { ShowEntity } from "src/entities/shows.entity";
-import { UserEntity } from "src/entities/users.entity";
 import { CreateShowDto, UpdateShowDto } from "src/dto/show.dto";
 import { UserRole } from "src/common/constants/enums";
 
-import { JwtAccessGuard } from "src/modules/auth/jwt/jwt.service";
-import { Roles } from "src/common/custom-decorator/user-roles-guard";
-import { RolesGuard } from "src/common/custom-decorator/user-roles-guard";
-import { CurrentUser } from "src/common/custom-decorator/user-currentuser";
+import { RequestUserByJwt } from "src/common/custom-decorator/user-request-jwt";
+import { JwtAccessGuards } from "src/modules/auth/jwt/jwt.service";
+import { RoleGuards } from "src/common/custom-decorator/user-roles-guard";
 
 @Controller("show")
 export class ShowController {
   constructor(private showService: ShowService) {}
 
-  @Post("create")
-  @UseGuards(JwtAccessGuard, RolesGuard)
-  @Roles(UserRole.HOST)
+  @Post()
+  @UseGuards(JwtAccessGuards, RoleGuards)
+  @RoleGuards(UserRole.HOST)
   @UsePipes(ValidationPipe)
   createShow(
     @Body() createShowDto: CreateShowDto,
-    @CurrentUser() user: UserEntity
-  ): Promise<ShowEntity> {
-    return this.showService.createShow(createShowDto, user);
+  ) {
+    return this.showService.createShow(createShowDto);
   }
 
-  @Get(":id")
-  @UseGuards(JwtAccessGuard)
-  getShow(
-    @Param("id") id: string
-  ): Promise<ShowEntity[]> {
-    const showId = parseInt(id);
-    return this.showService.getShow(showId);
+  @Get()
+  @UseGuards(JwtAccessGuards)
+  getShowsAll() {
+    return this.showService.getShowsAll();
   }
 
-  @Patch("update")
-  @UseGuards(JwtAccessGuard, RolesGuard)
-  @Roles(UserRole.HOST)
+  @Get(":param")
+  @UseGuards(JwtAccessGuards)
+  getShowsDetailsByGenre(
+    @Param("param") param: string
+  ) {
+    return this.showService.getShowsDetailsByGenre(param);
+  }
+
+  @Get(":showId")
+  @UseGuards(JwtAccessGuards)
+  getShowDetails(
+    @Param("showId", ParseIntPipe) showId: number
+  ) {
+    return this.showService.getShowDetails(showId);
+  }
+
+  @Patch(":showId")
+  @UseGuards(JwtAccessGuards, RoleGuards)
+  @RoleGuards(UserRole.HOST)
   @UsePipes(ValidationPipe)
   updateShow(
+    @Param("showId", ParseIntPipe) showId,
     @Body() updateShowDto: UpdateShowDto,
-    @CurrentUser() user: UserEntity
-  ): Promise<ShowEntity> {
-    return this.showService.updateShow(updateShowDto, user);
+    @RequestUserByJwt() userId: number
+  ) {
+    return this.showService.updateShow(showId, userId, updateShowDto);
   }
 
-  @Delete("delete")
-  @UseGuards(JwtAccessGuard, RolesGuard)
-  @Roles(UserRole.HOST)
+  @Delete(":showId")
+  @UseGuards(JwtAccessGuards, RoleGuards)
+  @RoleGuards(UserRole.HOST)
   deleteShow(
-    @Param("id", ParseIntPipe) id
-  ): Promise<void> {
-    return this.showService.deleteShow(id);
+    @Param("showId", ParseIntPipe) showId,
+    @RequestUserByJwt() userId: number
+  ) {
+    return this.showService.deleteShow(showId, userId);
   }
 }

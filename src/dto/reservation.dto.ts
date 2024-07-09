@@ -1,14 +1,7 @@
-import {
-  IsEnum,
-  IsNumber,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  Max,
-} from "class-validator";
+import { IsEnum, IsNumber, IsNotEmpty, IsOptional, IsString, Max } from "class-validator";
 import { SeatGrade } from "src/common/constants/enums";
 
-export class CreateSeatDto {
+export class CreateReservationDto {
   @IsNotEmpty()
   @IsEnum(SeatGrade)
   grade: SeatGrade;
@@ -24,7 +17,7 @@ export class CreateSeatDto {
   column: number;
 }
 
-export class UpdateSeatDto extends CreateSeatDto {
+export class UpdateReservationDto extends CreateReservationDto {
   @IsOptional()
   @IsEnum(SeatGrade)
   grade: SeatGrade;
