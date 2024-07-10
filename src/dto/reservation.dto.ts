@@ -6,10 +6,6 @@ export class CreateReservationDto {
   @IsEnum(SeatGrade)
   grade: SeatGrade;
 
-  @IsNumber()
-  @Max(50000, { message: "가격은 50000 포인트를 초과할 수 없습니다." })
-  price: number;
-
   @IsString()
   row: string;
 
@@ -21,11 +17,6 @@ export class UpdateReservationDto extends CreateReservationDto {
   @IsOptional()
   @IsEnum(SeatGrade)
   grade: SeatGrade;
-
-  @IsOptional()
-  @IsNumber()
-  @Max(50000, { message: "가격은 50000 포인트를 초과할 수 없습니다." })
-  price: number;
 
   @IsOptional()
   @IsString()

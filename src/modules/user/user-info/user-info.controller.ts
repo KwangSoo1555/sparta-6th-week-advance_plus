@@ -25,9 +25,10 @@ export class UserController {
   @UseGuards(JwtAccessGuards)
   @UsePipes(ValidationPipe)
   getUser(
-    @RequestUserByJwt() userId: number
+    @RequestUserByJwt() user: { userId: number }
   ) {
-    return this.userService.getUser(userId);
+    console.log("User ID:", user.userId);
+    return this.userService.getUser({ userId: user.userId });
   }
 
   @Patch("update")
@@ -35,9 +36,9 @@ export class UserController {
   @UsePipes(ValidationPipe)
   updateUser(
     @Body() updateUserDto: UpdateUserDto,
-    @RequestUserByJwt() userId: number
+    @RequestUserByJwt() user: { userId: number }
   ) {
-    return this.userService.updateUser(updateUserDto, userId);
+    return this.userService.updateUser(updateUserDto, user.userId);
   }
 
   @Patch("permission")
@@ -45,8 +46,8 @@ export class UserController {
   @UsePipes(ValidationPipe)
   updatePermission(
     @Body() updatePermissionDto: UpdateUserPermissionDto,
-    @RequestUserByJwt() userId: number
+    @RequestUserByJwt() user: { userId: number }
   ) {
-    return this.userService.updatePermission(updatePermissionDto, userId);
+    return this.userService.updatePermission(updatePermissionDto, user.userId);
   }
 }

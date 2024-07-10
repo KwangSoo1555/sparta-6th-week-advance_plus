@@ -15,11 +15,9 @@ import {
 import { ShowService } from "./show.service";
 
 import { CreateShowDto, UpdateShowDto } from "src/dto/show.dto";
-import { UserRole } from "src/common/constants/enums";
-
+import { RoleGuards } from "src/common/custom-decorator/user-roles-guard";
 import { RequestUserByJwt } from "src/common/custom-decorator/user-request-jwt";
 import { JwtAccessGuards } from "src/modules/auth/jwt/jwt.service";
-import { RoleGuards } from "src/common/custom-decorator/user-roles-guard";
 
 @Controller("show")
 export class ShowController {
@@ -27,7 +25,6 @@ export class ShowController {
 
   @Post()
   @UseGuards(JwtAccessGuards, RoleGuards)
-  @RoleGuards(UserRole.HOST)
   @UsePipes(ValidationPipe)
   createShow(
     @Body() createShowDto: CreateShowDto,
@@ -52,30 +49,28 @@ export class ShowController {
   @Get(":showId")
   @UseGuards(JwtAccessGuards)
   getShowDetails(
-    @Param("showId", ParseIntPipe) showId: number
+    @Param("showId", ParseIntPipe) showId
   ) {
     return this.showService.getShowDetails(showId);
   }
 
   @Patch(":showId")
   @UseGuards(JwtAccessGuards, RoleGuards)
-  @RoleGuards(UserRole.HOST)
   @UsePipes(ValidationPipe)
   updateShow(
     @Param("showId", ParseIntPipe) showId,
     @Body() updateShowDto: UpdateShowDto,
-    @RequestUserByJwt() userId: number
+    @RequestUserByJwt() user: { userId: number }
   ) {
-    return this.showService.updateShow(showId, userId, updateShowDto);
+    return this.showService.updateShow(showId, user.userId, updateShowDto);
   }
 
   @Delete(":showId")
   @UseGuards(JwtAccessGuards, RoleGuards)
-  @RoleGuards(UserRole.HOST)
   deleteShow(
     @Param("showId", ParseIntPipe) showId,
-    @RequestUserByJwt() userId: number
+    @RequestUserByJwt() user: { userId: number }
   ) {
-    return this.showService.deleteShow(showId, userId);
+    return this.showService.deleteShow(showId, user.userId);
   }
 }

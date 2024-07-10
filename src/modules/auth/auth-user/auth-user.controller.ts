@@ -8,20 +8,20 @@ import {
   Headers,
 } from "@nestjs/common";
 
-import { AuthService } from "src/modules/auth/auth-user/auth-user.service";
+import { AuthUserService } from "src/modules/auth/auth-user/auth-user.service";
 
 import { CreateSignUpDto, CreateSignInDto } from "src/dto/auth.dto";
 
 @Controller("auth")
-export class AuthController {
-  constructor(private authService: AuthService) {}
+export class AuthUserController {
+  constructor(private authUserService: AuthUserService) {}
 
   @Post("sign-up")
   @UsePipes(ValidationPipe)
   signUp(
     @Body() signUpDto: CreateSignUpDto
   ) {
-    return this.authService.signUp(signUpDto);
+    return this.authUserService.signUp(signUpDto);
   }
 
   @Post("sign-in")
@@ -31,6 +31,6 @@ export class AuthController {
     @Headers("user-agent") userAgent: string,
     @Body() signInDto: CreateSignInDto,
   ) {
-    return this.authService.signIn(signInDto, ip, userAgent);
+    return this.authUserService.signIn(signInDto, ip, userAgent);
   }
 }

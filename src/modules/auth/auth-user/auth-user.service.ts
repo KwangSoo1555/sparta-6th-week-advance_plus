@@ -10,7 +10,7 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 
-import { AuthRepository } from "src/modules/auth/auth-user/auth-user.repository";
+import { AuthUserRepository } from "src/modules/auth/auth-user/auth-user.repository";
 import { JwtRepository } from "src/modules/auth/jwt/jwt.repository";
 import { AuthEmailService } from "src/modules/auth/auth-email/auth-email.service";
 
@@ -19,9 +19,9 @@ import { MESSAGES } from "src/common/constants/message.constant";
 import { AUTH_CONSTANT } from "src/common/constants/auth.constant";
 
 @Injectable()
-export class AuthService {
+export class AuthUserService {
   constructor(
-    private authRepository: AuthRepository,
+    private authUserRepository: AuthUserRepository,
     private jwtRepository: JwtRepository,
     private authEmailService: AuthEmailService,
     private configService: ConfigService, 
@@ -30,7 +30,7 @@ export class AuthService {
   async checkUser(
     email: string
   ) {
-    return this.authRepository.checkUser(email);
+    return this.authUserRepository.checkUser({ email });
   }
 
   async signUp(
@@ -56,7 +56,7 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(password, AUTH_CONSTANT.HASH_SALT_ROUNDS);
 
     // 유저 생성 -> 비밀번호 해싱 적용
-    const signUpUser = await this.authRepository.signUp({
+    const signUpUser = await this.authUserRepository.signUp({
       ...signUpDto,
       password: hashedPassword,
     });

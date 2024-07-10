@@ -14,6 +14,7 @@ export class CreateShowDto {
   title: string;
 
   @IsNotEmpty()
+  @IsString()
   @MinLength(5)
   @MaxLength(255)
   description: string;
@@ -52,6 +53,7 @@ export class UpdateShowDto extends CreateShowDto {
   title: string;
 
   @IsOptional()
+  @IsString()
   @MinLength(5)
   @MaxLength(255)
   description: string;

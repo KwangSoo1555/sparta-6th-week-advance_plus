@@ -4,7 +4,7 @@ import {
   ForbiddenException 
 } from "@nestjs/common";
 
-import { ShowRepository } from "src/modules/show/show.repository";
+import { ShowRepository } from "./show.repository";
 
 import { CreateShowDto, UpdateShowDto } from "src/dto/show.dto";
 
@@ -38,7 +38,7 @@ export class ShowService {
     const show = await this.showRepository.getShowDetails(showId);
 
     // 공연 수정 권한 체크
-    if (show.userByUserEntity.userId !== userId)
+    if (show.user.userId !== userId)
       throw new ForbiddenException("You are not allowed to update this show");
 
     return this.showRepository.updateShow(updateShowDto, showId);
@@ -48,7 +48,7 @@ export class ShowService {
     const show = await this.showRepository.getShowDetails(showId);
 
     // 공연 삭제 권한 체크
-    if (show.userByUserEntity.userId !== userId)
+    if (show.user.userId !== userId)
       throw new ForbiddenException("You are not allowed to delete this show");
 
     const deletedShow = await this.showRepository.deleteShow(showId);

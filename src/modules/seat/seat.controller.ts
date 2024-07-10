@@ -15,11 +15,10 @@ import {
 import { SeatService } from "./seat.service";
 
 import { CreateSeatDto, UpdateSeatDto } from "src/dto/seat.dto";
-import { UserRole } from "src/common/constants/enums";
 
 import { RequestUserByJwt } from "src/common/custom-decorator/user-request-jwt";
 import { JwtAccessGuards } from "src/modules/auth/jwt/jwt.service";
-import { RoleGuards } from "src/common/custom-decorator/user-roles-guard";
+import { Roles, RoleGuards } from "src/common/custom-decorator/user-roles-guard";
 
 @Controller("seat")
 export class SeatController {
@@ -27,19 +26,17 @@ export class SeatController {
 
   @Post(":showId")
   @UseGuards(JwtAccessGuards, RoleGuards)
-  @RoleGuards(UserRole.HOST)
   @UsePipes(ValidationPipe)
   createSeat(
     @Body() createSeatDto: CreateSeatDto,
     @Param("showId", ParseIntPipe) showId: number,
-    @RequestUserByJwt() userId: number
+    @RequestUserByJwt() user: { userId: number }
   ) {
-    return this.seatService.createSeat(createSeatDto, showId, userId);
+    return this.seatService.createSeat(createSeatDto, showId, user.userId);
   }
 
   @Get(":seatId")
   @UseGuards(JwtAccessGuards, RoleGuards)
-  @RoleGuards(UserRole.HOST)
   getSeatInfo(
     @Param("seatId", ParseIntPipe) seatId: number,
   ) {
@@ -48,23 +45,21 @@ export class SeatController {
 
   @Patch(":seatId")
   @UseGuards(JwtAccessGuards, RoleGuards)
-  @RoleGuards(UserRole.HOST)
   @UsePipes(ValidationPipe)
   updateSeat(
     @Body() updateSeatDto: UpdateSeatDto,
     @Param("seatId", ParseIntPipe) seatId: number,
-    @RequestUserByJwt() userId: number
+    @RequestUserByJwt() user: { userId: number }
   ) {
-    return this.seatService.updateSeat(updateSeatDto, seatId, userId);
+    return this.seatService.updateSeat(updateSeatDto, seatId, user.userId);
   }
 
   @Delete(":seatId")
   @UseGuards(JwtAccessGuards, RoleGuards)
-  @RoleGuards(UserRole.HOST)
   deleteSeat(
     @Param("seatId", ParseIntPipe) seatId: number,
-    @RequestUserByJwt() userId: number
+    @RequestUserByJwt() user: { userId: number }
   ) {
-    return this.seatService.deleteSeat(seatId, userId);
+    return this.seatService.deleteSeat(seatId, user.userId);
   }
 }

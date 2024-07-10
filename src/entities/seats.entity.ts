@@ -4,10 +4,12 @@ import {
   Column,
   PrimaryGeneratedColumn,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
+  OneToMany,
 } from "typeorm";
 
 import { ShowEntity } from "./shows.entity";
+import { ReservationEntity } from "./reservation.entity";
 import { SeatGrade } from "src/common/constants/enums";
 
 @Entity("seat")
@@ -15,12 +17,12 @@ export class SeatEntity extends BaseEntity {
   @PrimaryGeneratedColumn({ name: "seat_id" })
   seatId: number;
 
-  @OneToOne(() => ShowEntity, (showByShowEntity) => showByShowEntity.seatBySeatEntity)
+  @ManyToOne(() => ShowEntity, (show) => show.seat)
   @JoinColumn({
     name: "show_id",
     referencedColumnName: "showId",
   })
-  showByShowEntity: ShowEntity;
+  show: ShowEntity;
 
   @Column({ type: "enum", enum: SeatGrade, nullable: true, default: SeatGrade.BRONZE })
   grade: SeatGrade;
@@ -33,4 +35,7 @@ export class SeatEntity extends BaseEntity {
 
   @Column()
   column: number;
+
+  @OneToMany(() => ReservationEntity, (reservation) => reservation.seat)
+  reservation: ReservationEntity[];
 }

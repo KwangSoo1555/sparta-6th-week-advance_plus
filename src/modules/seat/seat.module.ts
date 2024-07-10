@@ -1,11 +1,11 @@
-import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
 
-import { SeatRepository } from './seat.repository';
-import { SeatService } from './seat.service';
-import { SeatController } from './seat.controller';
+import { SeatRepository } from "./seat.repository";
+import { SeatService } from "./seat.service";
+import { SeatController } from "./seat.controller";
 
-import { ShowRepository } from 'src/modules/show/show.repository';
+import { ShowRepository } from "src/modules/show/show.repository";
 
 @Module({
   imports: [TypeOrmModule.forFeature([SeatRepository, ShowRepository])],

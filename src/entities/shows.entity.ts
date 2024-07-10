@@ -7,25 +7,21 @@ import {
   UpdateDateColumn,
   JoinColumn,
   ManyToOne,
-  OneToOne,
-  Unique,
+  OneToMany,
 } from "typeorm";
 
 import { UserEntity } from "./users.entity";
 import { SeatEntity } from "./seats.entity";
+import { ReservationEntity } from "./reservation.entity";
 
 @Entity("show")
-@Unique(["userByUserEntity"])
 export class ShowEntity extends BaseEntity {
   @PrimaryGeneratedColumn({ name: "show_id" })
   showId: number;
 
-  @ManyToOne(() => UserEntity, (userByUserEntity) => userByUserEntity.showByShowEntity)
-  @JoinColumn({
-    name: "user_id",
-    referencedColumnName: "userId",
-  })
-  userByUserEntity: UserEntity;
+  @ManyToOne(() => UserEntity, (user) => user.show)
+  @JoinColumn({ name: "user_id", referencedColumnName: "userId"})
+  user: UserEntity;
 
   @Column()
   title: string;
@@ -57,6 +53,9 @@ export class ShowEntity extends BaseEntity {
   @UpdateDateColumn({ name: "updated_at" })
   updatedAt: Date;
 
-  @OneToOne(() => SeatEntity, (seatBySeatEntity) => seatBySeatEntity.showByShowEntity)
-  seatBySeatEntity: SeatEntity;
+  @OneToMany(() => SeatEntity, (seat) => seat.show)
+  seat: SeatEntity[];
+
+  @OneToMany(() => ReservationEntity, (reservation) => reservation.show)
+  reservation: ReservationEntity;
 }

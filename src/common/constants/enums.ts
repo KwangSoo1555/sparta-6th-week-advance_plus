@@ -12,10 +12,6 @@ export enum SeatGrade {
 }
 
 export class SeatGradeInfo {
-  static readonly VIP = {
-    price: 50000,
-  };
-
   static SeatPrice(grade: SeatGrade | null): number {
     if (grade === null) {
       return 0;
@@ -23,7 +19,7 @@ export class SeatGradeInfo {
 
     switch (grade) {
       case SeatGrade.VIP:
-        return this.VIP.price;
+        return 1
       case SeatGrade.PREMIUM:
         return 1
       case SeatGrade.GOLD:
@@ -37,24 +33,24 @@ export class SeatGradeInfo {
 
   static validatePrices(prices: { [key in SeatGrade]?: number }) {
     const gradeOrder = [
-      SeatGrade.BRONZE,
-      SeatGrade.SILVER,
-      SeatGrade.GOLD,
-      SeatGrade.PREMIUM,
       SeatGrade.VIP,
+      SeatGrade.PREMIUM,
+      SeatGrade.GOLD,
+      SeatGrade.SILVER,
+      SeatGrade.BRONZE,
     ];
 
     for (let i = 1; i < gradeOrder.length; i++) {
-      const currentGrade = gradeOrder[i];
-      const previousGrade = gradeOrder[i - 1];
+      const lowGrade = gradeOrder[i];
+      const highGrade = gradeOrder[i - 1];
 
       if (
-        prices[currentGrade] !== undefined &&
-        prices[previousGrade] !== undefined &&
-        prices[currentGrade]! < prices[previousGrade]!
+        prices[lowGrade] !== undefined &&
+        prices[highGrade] !== undefined &&
+        prices[lowGrade] > prices[highGrade]!
       ) {
         throw new Error(
-          `${currentGrade} 좌석의 가격은 ${previousGrade} 좌석의 가격보다 낮을 수 없습니다.`
+          `${lowGrade} 좌석의 가격은 ${highGrade} 좌석의 가격보다 낮을 수 없습니다.`
         );
       }
     }

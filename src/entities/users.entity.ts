@@ -11,6 +11,7 @@ import {
 
 import { JwtEntity } from "src/entities/jwt.entity";
 import { ShowEntity } from "src/entities/shows.entity";
+import { ReservationEntity } from "src/entities/reservation.entity";
 
 import { UserRole } from "src/common/constants/enums";
 
@@ -50,10 +51,13 @@ export class UserEntity extends BaseEntity {
   updatedAt: Date;
 
   // userId 를 jwt entity 외래키로 연결하는 엔티티
-  @OneToOne(() => JwtEntity, (jwtByJwtEntity) => jwtByJwtEntity.userByUserEntity)
-  jwtByJwtEntity: JwtEntity;
+  @OneToOne(() => JwtEntity, (jwt) => jwt.user)
+  jwt: JwtEntity;
 
   // userId 를 show entity 외래키로 연결하는 엔티티
-  @OneToMany(() => ShowEntity, (showByShowEntity) => showByShowEntity.userByUserEntity)
-  showByShowEntity: ShowEntity[];
+  @OneToMany(() => ShowEntity, (show) => show.user)
+  show: ShowEntity[];
+
+  @OneToMany(() => ReservationEntity, (reservation) => reservation.user)
+  reservation: ReservationEntity[];
 }

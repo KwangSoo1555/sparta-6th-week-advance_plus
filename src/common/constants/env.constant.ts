@@ -7,9 +7,6 @@ export const ENV = {
   // MySQL 연결 정보
   MYSQL_URI: process.env.DATABASE_URL,
 
-  // MongoDB 연결 정보
-  MONGODB_URI: process.env.MONGODB_URI,
-
   // JWT 관련
   ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET,
   REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET,

@@ -9,9 +9,9 @@ import {
   Ip,
 } from "@nestjs/common";
 
-import { JwtService } from "src/modules/auth/jwt/jwt.service";
+import { JwtService } from "./jwt.service";
 
-import { JwtRefreshGuards } from "src/modules/auth/jwt/jwt.service";
+import { JwtRefreshGuards } from "./jwt.service";
 import { RequestUserByJwt } from "src/common/custom-decorator/user-request-jwt";
 
 
